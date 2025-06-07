@@ -144,7 +144,7 @@ working. Further configuration is required.</p>
 ```bash
 ansible-playbook -l web web.yaml -k
 ```
-[web.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/web.yaml)
+##### Плейбук для разворачивания [web.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/web.yaml)
 
 
 Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.
