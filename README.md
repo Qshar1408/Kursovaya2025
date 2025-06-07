@@ -34,6 +34,9 @@
 Создайте две ВМ в разных зонах, установите на них сервер nginx, если его там нет. ОС и содержимое ВМ должно быть идентичным, это будут наши веб-сервера.
 
 Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.
+
+#### 1.Создаём машины А и B (web-a и web-b)
+
 ```bash
 #Создаем машину А
 resource "yandex_compute_instance" "web-a"{
@@ -69,7 +72,6 @@ resource "yandex_compute_instance" "web-a"{
 }
 
 #Создаем машину В 
-
 resource "yandex_compute_instance" "web-b"{
   name            = "web-b"
   platform_id     = "standard-v1"
