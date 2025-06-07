@@ -150,6 +150,14 @@ ansible-playbook -l web web.yaml -k
 ```
 #### Плейбук для разворачивания [web.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/web.yaml)
 
+##### Скриншот запущенного nginx:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_002.png)
+
+##### Скриншот запущенного Filebeat:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_003.png)
+
+##### Скриншот запущенного Node Exporter:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_004.png)
 
 #### Задача № 3. *Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.*
 
