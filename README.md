@@ -35,6 +35,7 @@
 
 Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.
 ```bash
+#Создаем машину А
 resource "yandex_compute_instance" "web-a"{
   name            = "web-a"
   platform_id     = "standard-v1"
