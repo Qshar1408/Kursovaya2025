@@ -34,6 +34,74 @@
 Создайте две ВМ в разных зонах, установите на них сервер nginx, если его там нет. ОС и содержимое ВМ должно быть идентичным, это будут наши веб-сервера.
 
 Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.
+```bash
+resource "yandex_compute_instance" "web-a"{
+  name            = "web-a"
+  platform_id     = "standard-v1"
+  zone      = "ru-central1-a"
+  allow_stopping_for_update = true
+  hostname = "web-a"
+
+  resources {
+    cores         = 2
+    core_fraction = 5
+    memory        = 1
+  }
+
+    boot_disk {
+    disk_id     = "${yandex_compute_disk.disk_web-a.id}"
+  }
+  
+  network_interface {
+    subnet_id = "${yandex_vpc_subnet.subnet-1.id}"
+    nat       = true
+      }
+
+   metadata = {
+    ssh-keys    = "qshar:${file("~/.ssh/id_rsa2025.pub")}"
+    user-data   = "#cloud-config\ndatasource:\n Ec2:\n  strict_id: false\nssh_pwauth: no\nusers:\n- name: qshar\n  sudo: ALL=(ALL) NOPASSWD:ALL\n  shell: /bin/bash\n  ssh_authorized_keys:\n  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIItN3dEKvFKOGoTEQGZbdp7Gy9gXeKZK9T85zlyaM63T qshar@qsharpc03"
+  }
+
+  scheduling_policy {
+    preemptible = true
+  }
+}
+
+#Создаем машину В 
+
+resource "yandex_compute_instance" "web-b"{
+  name            = "web-b"
+  platform_id     = "standard-v1"
+  zone      = "ru-central1-b"
+  allow_stopping_for_update = true
+  hostname = "web-b"
+
+  resources {
+    cores         = 2
+    core_fraction = 5
+    memory        = 1
+  }
+
+     boot_disk {
+    disk_id     = "${yandex_compute_disk.disk_web-b.id}"
+  }
+  
+  network_interface {
+    subnet_id = "${yandex_vpc_subnet.subnet-2.id}"
+    nat       = true
+    
+  }
+
+ metadata = {
+    ssh-keys    = "qshar:${file("~/.ssh/id_rsa2025.pub")}"
+    user-data   = "#cloud-config\ndatasource:\n Ec2:\n  strict_id: false\nssh_pwauth: no\nusers:\n- name: qshar\n  sudo: ALL=(ALL) NOPASSWD:ALL\n  shell: /bin/bash\n  ssh_authorized_keys:\n  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIItN3dEKvFKOGoTEQGZbdp7Gy9gXeKZK9T85zlyaM63T qshar@qsharpc03"
+  }
+
+  scheduling_policy {
+    preemptible = true
+  }
+}
+```
 
 Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.
 
