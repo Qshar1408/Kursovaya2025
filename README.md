@@ -141,13 +141,39 @@ working. Further configuration is required.</p>
 ```
 
 #### 3. С помощью Ansible-playbook устанавливаем на машинах web-a и web-b следующие сервисы: Nginx, Filebeat, Node Exporter 
+
 ```bash
 ansible-playbook -l web web.yaml -k
 ```
 #### Плейбук для разворачивания [web.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/web.yaml)
 
 
-Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.
+#### *Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.*
+
+#### 4.Создаем Target Group [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.yaml)
+
+```bash
+#Создаем Target Group
+
+resource "yandex_alb_target_group" "web-target-group" {
+  name           = "web-target-group"
+  description    = "ALB:Целевая группа"
+  target {
+    subnet_id    = yandex_vpc_subnet.subnet-1.id
+    ip_address   = yandex_compute_instance.web-a.network_interface.0.ip_address
+  }
+
+  target {
+    subnet_id    = yandex_vpc_subnet.subnet-2.id
+    ip_address   = yandex_compute_instance.web-b.network_interface.0.ip_address
+  }
+  
+  depends_on = [
+     yandex_compute_instance.web-a,
+     yandex_compute_instance.web-b,
+  ]
+}
+```
 
 Создайте [Backend Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/backend-group), настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.
 
