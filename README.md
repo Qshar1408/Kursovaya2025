@@ -140,6 +140,12 @@ working. Further configuration is required.</p>
 </html>
 ```
 
+#### 3.С помощью Ansible-playbook устанавливаем на машинах web-a и web-b следующие сервисы Nginx, Filebeat, Node Exporter 
+```bash
+ansible-playbook -l web web.yaml -k
+```
+
+
 Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.
 
 Создайте [Backend Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/backend-group), настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.
