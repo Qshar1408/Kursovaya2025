@@ -185,6 +185,8 @@ resource "yandex_alb_target_group" "web-target-group" {
   ]
 }
 ```
+##### Скриншот созданной Target Group:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_005.png)
 
 #### Задача № 4. *Создайте [Backend Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/backend-group), настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.*
 
@@ -215,6 +217,8 @@ resource "yandex_alb_backend_group" "my_backend_group" {
     }
   }
 ```
+##### Скриншот созданной Backend Group:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_006.png)
 
 #### Задача № 5. *Создайте [HTTP router](https://cloud.yandex.com/docs/application-load-balancer/concepts/http-router). Путь укажите — /, backend group — созданную ранее.*
 
@@ -247,6 +251,8 @@ resource "yandex_alb_virtual_host" "my_virtual_host" {
   ]
 }
 ```
+##### Скриншот созданного HTTP router:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_007.png)
 
 #### Задача № 6. *Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.*
 
@@ -292,6 +298,8 @@ listener {
   ]
 }
 ```
+##### Скриншот созданного Application load balancer:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_008.png)
 
 #### Задача № 7. *Протестируйте сайт `curl -v <публичный IP балансера>:80`*
 #### 7.Тест сайта:
