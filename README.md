@@ -105,6 +105,7 @@ resource "yandex_compute_instance" "web-b"{
 }
 ```
 
+##### Скриншот развернутых машин
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_001.png)
 
 
