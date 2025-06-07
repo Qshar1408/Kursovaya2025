@@ -1,0 +1,258 @@
+---
+- name: nginx
+  hosts: web
+  gather_facts: false
+  
+  pre_tasks:
+  
+  - name: Wait for target connection to become reachable/usable
+    ansible.builtin.wait_for_connection:
+      delay: 20
+      sleep: 2
+      timeout: 300
+
+  - name: Wait for port 22 to become open on the hosts
+    ansible.builtin.wait_for:
+      port: 22
+      delay: 5
+      connect_timeout: 20
+
+  - name: Gather facts
+    ansible.builtin.setup:
+
+  tasks:
+
+#  - name: Wait for target to become usable
+#    ansible.builtin.pause:
+#      delta: 20
+#      echo: no
+
+  - name: Install nginx
+    ansible.builtin.package:
+      name: nginx
+      state: present
+    notify:
+    - Start nginx
+    become: true
+
+#  - name: Copy files
+#    ansible.builtin.copy: src={{ item.0 }} dest={{ item.1 }}
+#    with_together:
+#      - [ '~/kurs2025/web/nginx/default', '~/kurs2025/web/nginx/nginx.conf', '~/kurs2025/web/WWW/index.nginx-debian.html' ]
+#      - [ '/etc/nginx/sites-enabled/', '/etc/nginx/', '/var/www/html/' ]
+#    become: true
+
+  - name: Copy files
+    ansible.builtin.copy: src={{ item.0 }} dest={{ item.1 }}
+    with_together:
+      - [ '~/kurs2025/web/nginx/default', '~/kurs2025/web/nginx/nginx.conf' ]
+      - [ '/etc/nginx/sites-enabled/', '/etc/nginx/' ]
+    become: true
+  
+  handlers:
+  - name: Start nginx 
+    service: name=nginx state=started
+
+################################
+
+- name: Copy html file web-a
+  hosts: web-a
+  become: true
+  gather_facts: false
+  
+  tasks:
+  - name: "Copy index.nginx-debian.html web-a"
+    ansible.builtin.copy:
+      src: ~/kurs2025/web/WWW/index.nginx-debian-web-a.html
+      dest: /var/www/html/index.nginx-debian.html
+
+###############################
+
+- name: Copy html file web-b
+  hosts: web-b
+  become: true
+  gather_facts: false
+  
+  tasks:
+  - name: Copy index.nginx-debian.html web-b
+    ansible.builtin.copy:
+      src: ~/kurs2025/web/WWW/index.nginx-debian-web-b.html
+      dest: /var/www/html/index.nginx-debian.html
+
+###############################
+
+- name: nginx restart
+  hosts: web
+  become: true
+  gather_facts: false
+  
+  tasks:
+  - name: "Restart service nginx"
+    ansible.builtin.service:
+      name: nginx
+      state: restarted
+    retries: 2
+    delay: 2
+
+###############################
+ 
+- name: filebeat
+  hosts: web
+  become: true
+  
+  tasks:
+#  - name: Push filebeat-7.17.11-amd64.deb (copy - SHA256)
+#    ansible.builtin.copy:
+#      src: ~/packages/filebeat-7.17.11-amd64.deb
+#      #src: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.17.11-amd64.deb
+#      dest: /tmp/filebeat-7.17.11-amd64.deb
+#      checksum: sha256:b3dd37d178b30f07bd0b1585d2d5ed7d7b0f3a8fc0247cc1706e1e69a970608b
+#      remote_src: false
+#      #mode: preserve
+
+  - name: Push filebeat-7.17.11-amd64.deb (get_url - SHA256)
+    ansible.builtin.get_url:
+      #url: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.17.11-amd64.deb
+      url: https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/9b2hYmXUAv63zg
+      dest: /tmp/filebeat-7.17.11-amd64.deb
+      checksum: sha256:b3dd37d178b30f07bd0b1585d2d5ed7d7b0f3a8fc0247cc1706e1e69a970608b
+      #mode: '0740'
+
+#  - name: Push filebeat-7.17.11-amd64.deb (https://getfile.dokpub.com/yandex/)
+#    ansible.builtin.shell: wget "https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/9b2hYmXUAv63zg" -O /tmp/filebeat-7.17.11-amd64.deb
+
+  - name: Install filebeat
+    ansible.builtin.apt:
+      deb: /tmp/filebeat-7.17.11-amd64.deb
+      #deb: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.17.11-amd64.deb
+
+  - name: Copy filebeat.yml
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/filebeat/filebeat.yml
+      dest: /etc/filebeat/filebeat.yml
+      mode: '0600'
+      
+  - name: Copy nginx.yml.disabled
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/filebeat/nginx.yml.disabled
+      dest: /etc/filebeat/modules.d/nginx.yml.disabled
+      mode: preserve
+
+  - name: Enable nginx module - copy nginx.yml.disabled to nginx.yml
+    ansible.builtin.copy:
+      remote_src: true
+      src: /etc/filebeat/modules.d/nginx.yml.disabled
+      dest: /etc/filebeat/modules.d/nginx.yml
+
+  - name: Enable nginx module - remove nginx.yml.disabled
+    ansible.builtin.file:
+      path: /etc/filebeat/modules.d/nginx.yml.disabled
+      state: absent
+#
+#  - name: Enable nginx module
+#    ansible.builtin.command: filebeat modules enabled nginx
+
+  - name: Enable service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      enabled: yes
+  
+  - name: Start service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      state: started
+
+#Kibana must be running and reachable
+#  - name: Setup dashboards in kibana
+#    ansible.builtin.command: filebeat setup --dashboards
+
+- name: node-exporter
+  hosts: web
+  tasks:
+
+  - name: Copy script install node-exporter-install-sudo
+    ansible.builtin.copy:
+      src: ~/kurs2025/monitoring/node-exporter-install-sudo
+      dest: /tmp/
+      owner: qshar
+      group: qshar
+      mode: u+x,g+x,o+x
+
+#  - name: Copy node-exporter.service file
+#    become: true
+#    copy:
+#      src: ~/kurs2025/monitoring/node-exporter.service
+#      dest: /etc/systemd/system/
+
+  - name: Copy node-exporter.service file
+    ansible.builtin.copy:
+      src: ~/kurs2025/monitoring/node-exporter.service
+      dest: /tmp/
+      owner: qshar
+      group: qshar
+
+  - name: Install node-exporter (start script install)
+    ansible.builtin.command: ./node-exporter-install-sudo
+    args:
+      chdir: /tmp/
+
+- name: prometheus-nginxlog-exporter
+  become: true
+  hosts: web
+  tasks:
+  
+  - name: Push prometheus-nginxlog-exporter_1.9.2_linux_amd64.deb
+    ansible.builtin.shell: wget https://github.com/martin-helmich/prometheus-nginxlog-exporter/releases/download/v1.9.2/prometheus-nginxlog-exporter_1.9.2_linux_amd64.deb -O /tmp/prometheus-nginxlog-exporter_1.9.2_linux_amd64.deb
+    
+#  - name: Push prometheus-nginxlog-exporter_1.9.2_linux_amd64.deb
+#    ansible.builtin.copy:
+#      src: ~/packages/prometheus-nginxlog-exporter_1.9.2_linux_amd64.deb
+#      #src: https://github.com/martin-helmich/prometheus-nginxlog-exporter/releases/download/v1.9.2/prometheus-nginxlog-exporter_1.9.2_linux_amd64.deb 
+#      dest: /tmp/prometheus-nginxlog-exporter_1.9.2_linux_amd64.deb
+#      remote_src: false
+#      mode: preserve
+
+  - name: Install prometheus-nginxlog-exporter
+    ansible.builtin.apt:
+      deb: /tmp/prometheus-nginxlog-exporter_1.9.2_linux_amd64.deb
+
+  - name: Copy prometheus-nginxlog-exporter.hcl file
+    become: true
+    ansible.builtin.copy:
+      src: ~/kurs2025/monitoring/prometheus-nginxlog-exporter.hcl
+      dest: /etc/
+
+#Права на чтения лог файлов nginx для prometheus-nginxlog-exporter
+  - name: Set flag o+r for access.log
+    become: true
+    ansible.builtin.file:
+      path: /var/log/nginx/access.log
+      mode: o+r
+
+  - name: Set flag o+r for error.log
+    become: true
+    ansible.builtin.file:
+      path: /var/log/nginx/error.log
+      mode: o+r
+      
+  - name: Start service prometheus-nginxlog-exporter
+    ansible.builtin.service:
+      name: prometheus-nginxlog-exporter
+      state: started
+#  hosts: 127.0.0.1
+#  connection: local
+#  gather_facts: false
+#  pre_tasks:
+#  - name: remove-one-to-one-nat WEB1
+#    ansible.builtin.command: yc compute instance remove-one-to-one-nat --name={{ name_web1 }} --network-interface-index=0
+#  - name: remove-one-to-one-nat WEB2
+#    ansible.builtin.command: yc compute instance remove-one-to-one-nat --name={{ name_web2 }} --network-interface-index=0
+#  tasks:
+#  - name: Create target group
+#    ansible.builtin.shell: yc alb target-group create project-web-target-group --description="ALB:Целевая группа" --target subnet-name=default-ru-central1-a,ip-address={{ ip_int_web1 }} --target subnet-name=default-ru-central1-b,ip-address={{ ip_int_web2 }}
+#    register: yc
+    
+#  - name: Print
+#    ansible.builtin.debug: msg={{ yc.stdout_lines }}
+  
+...

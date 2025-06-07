@@ -1,0 +1,220 @@
+---
+- name: Prometheus and Grafana reachable/usable
+  hosts: mons
+  gather_facts: false
+  
+  pre_tasks:
+  
+  - name: Wait for target connection to become reachable/usable
+    ansible.builtin.wait_for_connection:
+      delay: 20
+      sleep: 2
+      timeout: 300
+
+  - name: Wait for port 22 to become open on the hosts
+    ansible.builtin.wait_for:
+      port: 22
+      delay: 5
+      connect_timeout: 20
+
+  - name: Gather facts
+    ansible.builtin.setup:
+
+- name: Prometheus and Node-exporter Prometheus-nginxlog-exporter
+  hosts: prometheus-pc
+#  become: true
+  gather_facts: false
+    
+  tasks:
+  
+  - name: Copy script install prometheus
+    ansible.builtin.copy:
+      src: ~/kurs2025/monitoring/prometheus/prometheus-install-sudo
+      dest: /tmp/
+      owner: qshar
+      group: qshar
+      mode: u+x,g+x,o+x
+
+
+  - name: Copy prometheus.yml & prometheus.service files
+    ansible.builtin.copy: src={{ item.0 }} dest={{ item.1 }}
+    with_together:
+      - [ '~/kurs2025/monitoring/prometheus/prometheus.service', '~/kurs2025/monitoring/prometheus/prometheus.yml' ]
+      - [ '/tmp/', '/tmp/' ]
+
+  - name: Install prometheus (start script install)
+    ansible.builtin.command: ./prometheus-install-sudo
+    args:
+      chdir: /tmp/
+
+  - name: Copy script install node-exporter-install-sudo
+    ansible.builtin.copy:
+      src: ~/kurs2025/monitoring/node-exporter-install-sudo
+      dest: /tmp/
+      owner: qshar
+      group: qshar
+      mode: u+x,g+x,o+x
+
+
+  - name: Copy node-exporter.service file
+    ansible.builtin.copy:
+      src: ~/kurs2025/monitoring/node-exporter.service
+      dest: /tmp/
+      owner: qshar
+      group: qshar
+
+  - name: Install node-exporter (start script install)
+    ansible.builtin.command: ./node-exporter-install-sudo
+    args:
+      chdir: /tmp/
+
+
+  - name: Wait for prometheus service up (port 9090 to become open on the host)
+    ansible.builtin.wait_for:
+      port: 9090
+      delay: 5
+      connect_timeout: 20
+
+- name: Edit file grafana.md
+  hosts: 127.0.0.1
+  connection: local
+  gather_facts: false
+  tasks:
+  - name: Edit prometheus server IP address in grafana.db
+    ansible.builtin.command: sqlite3 grafana.db "update data_source set url='http://{{ ip_prom }}:9090' where name='Prometheus'"
+    args:
+      chdir: ~/kurs2025/monitoring/grafana
+
+- name: Grafana
+  hosts: grafana-pc
+  become: true
+  gather_facts: false
+  
+  tasks:
+  
+  - name: Copy public ssh-key id_rsa2025.pub (for bastion)
+    ansible.builtin.copy:
+      src: ~/.ssh/id_rsa2025.pub
+      dest: /home/qshar/.ssh/id_rsa2025.pub
+      owner: qshar
+      group: qshar
+      mode: '0644'
+
+  - name: Copy private ssh-key id_rsa2025 (for bastion)
+    ansible.builtin.copy:
+      src: ~/.ssh/id_ed25519
+      dest: /home/qshar/.ssh/id_rsa2025
+      owner: qshar
+      group: qshar
+      mode: '0600'
+      
+  - name: Update apt cache
+    ansible.builtin.apt:
+      update_cache: yes
+      cache_valid_time: 3600
+
+  - name: Fix-broken apt (for install libfontconfig1)
+    ansible.builtin.shell: apt --fix-broken install -y
+
+  - name: Install the package "libfontconfig1" (for grafana)
+    ansible.builtin.apt:
+      name: libfontconfig1
+    
+  - name: Push grafana_9.5.6_amd64.deb
+    ansible.builtin.shell: wget https://dl.grafana.com/oss/release/grafana_9.5.6_amd64.deb -O /tmp/grafana_9.5.6_amd64.deb
+
+  - name: Install grafana
+    ansible.builtin.shell: dpkg -i /tmp/grafana_9.5.6_amd64.deb
+
+  - name: Stop service grafana-server
+    ansible.builtin.service:
+      name: grafana-server
+      state: stopped
+
+  - name: Copy grafana.db
+    ansible.builtin.copy:
+      src: ~/kurs2025/monitoring/grafana/grafana.db
+      dest: /var/lib/grafana/grafana.db
+      owner: grafana
+      group: grafana
+      mode: '0640'
+
+  - name: Start service grafana-server
+    ansible.builtin.service:
+      name: grafana-server
+      state: started
+
+  - name: Wait for grafana service up (port 3000 to become open on the host)
+    ansible.builtin.wait_for:
+      port: 3000
+      delay: 5
+      connect_timeout: 20
+
+##############################################
+ 
+- name: filebeat install
+  hosts: mons
+  become: true
+  
+  tasks:
+
+  - name: Push filebeat-7.17.28-amd64.deb (get_url - sha256)
+    ansible.builtin.get_url:
+      url: https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/mSOVfRwqpeF39g
+      dest: /tmp/filebeat-7.17.28-amd64.deb
+      checksum: sha256:b66cf690ab32daa852c82ca76c5712d87068082b1a6d3e7defdf101d8c99ee78
+      
+
+  - name: Install filebeat
+    ansible.builtin.apt:
+      deb: /tmp/filebeat-7.17.28-amd64.deb
+
+##############################################
+
+- name: filebeat on prometheus start
+  hosts: prometheus-pc
+  become: true
+  
+  tasks:
+
+  - name: Copy filebeat.yml
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/filebeat/filebeat_prometheus.yml
+      dest: /etc/filebeat/filebeat.yml
+      mode: '0600'
+
+  - name: Enable service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      enabled: yes
+  
+  - name: Start service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      state: started
+
+##############################################
+
+- name: filebeat on grafana start
+  hosts: grafana-pc
+  become: true
+  
+  tasks:
+
+  - name: Copy filebeat.yml
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/filebeat/filebeat_grafana.yml
+      dest: /etc/filebeat/filebeat.yml
+      mode: '0600'
+      
+  - name: Enable service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      enabled: yes
+  
+  - name: Start service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      state: started
+
+...

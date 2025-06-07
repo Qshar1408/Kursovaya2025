@@ -1,0 +1,12 @@
+[logs]
+elastic-pc ansible_host=89.169.143.212 ansible_connection=ssh ansible_ssh_user=qshar
+kibana-pc ansible_host=158.160.53.216 ansible_connection=ssh ansible_ssh_user=qshar
+
+[web]
+web-a ansible_host=84.201.129.152 ansible_connection=ssh ansible_ssh_user=qshar
+web-b ansible_host=89.169.167.53 ansible_connection=ssh ansible_ssh_user=qshar
+  
+[mons]
+prometheus-pc ansible_host=158.160.56.184 ansible_connection=ssh ansible_ssh_user=qshar
+grafana-pc ansible_host=89.169.129.193 ansible_connection=ssh ansible_ssh_user=qshar
+

@@ -1,0 +1,7 @@
+server.port: 5601
+server.host: "0.0.0.0"
+elasticsearch.hosts: ["http://192.168.10.21:9200"]
+server.publicBaseUrl: "http://158.160.53.216:5601"
+elasticsearch.username: "elastic"
+elasticsearch.password: "1qaz@WSX"
+#elasticsearch.ssl.verificationMode: *none*

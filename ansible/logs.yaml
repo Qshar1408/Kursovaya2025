@@ -1,0 +1,223 @@
+---
+- name: Elastiksearch+Kibana
+  hosts: logs
+  become: true
+  gather_facts: false
+  
+  pre_tasks:
+  
+  - name: Wait for target connection to become reachable/usable
+    ansible.builtin.wait_for_connection:
+      delay: 20
+      sleep: 2
+      timeout: 300
+
+  - name: Wait for port 22 to become open on the hosts
+    ansible.builtin.wait_for:
+      port: 22
+      delay: 5
+      connect_timeout: 20
+
+  - name: Gather facts
+    ansible.builtin.setup:
+  
+  tasks:
+  - name: Update+Install pip
+    ansible.builtin.apt:
+      name: pip
+      state: present
+      update_cache: yes
+      cache_valid_time: 3600
+      
+  - name: Install pexpect
+    ansible.builtin.pip:
+      name: pexpect
+
+- name: Elastiksearch
+  hosts: elastic-pc
+  become: true
+  gather_facts: false
+  
+  tasks:
+
+  - name: Push elasticsearch-7.17.28-amd64.deb (get_url - SHA256)
+    ansible.builtin.get_url:
+      url: https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/47nUcoOIOShzPw
+      dest: /tmp/elasticsearch-7.17.28-amd64.deb
+      checksum: sha256:a90b5bb0f90e1d58dfa8dcc55627f86721f6179ee07f5b66c73eaa8913a2e2cd
+
+
+  - name: Install elasticsearch
+    ansible.builtin.apt:
+      deb: /tmp/elasticsearch-7.17.28-amd64.deb
+
+
+  - name: Copy elasticsearch.yml
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/elasticsearch/elasticsearch.yml
+      dest: /etc/elasticsearch/elasticsearch.yml
+      mode: preserve
+
+  - name: Enable service elasticsearch
+    ansible.builtin.service:
+      name: elasticsearch.service
+      enabled: yes
+  
+  - name: Start service elasticsearch
+    ansible.builtin.service:
+      name: elasticsearch.service
+      state: started
+
+  - name: Generic question with multiple different responses
+    ignore_errors: true
+    ansible.builtin.expect:
+      chdir: /usr/share/elasticsearch/bin/
+      echo: true
+      command: /usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive
+      responses:
+        (.*)Please confirm that you would like to continue(.*): "y"
+        (.*)elastic(.*): "1qaz@WSX"
+        (.*)apm_system(.*): "1qaz@WSX"
+        (.*)kibana_system(.*): "1qaz@WSX"
+        (.*)logstash_system(.*): "1qaz@WSX"
+        (.*)beats_system(.*): "1qaz@WSX"
+        (.*)remote_monitoring_user(.*): "1qaz@WSX"
+        
+    
+- name: Kibana
+  hosts: kibana-pc
+  become: true
+  gather_facts: false
+  
+  tasks:
+
+  - name: Push kibana-7.17.28-amd64.deb (get_url - SHA256)
+    ansible.builtin.get_url:
+      url: https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/zW7kpJMur-LYxg
+      dest: /tmp/kibana-7.17.28-amd64.deb
+      checksum: sha256:a50de14944c583d0ca56da411e4b6ca7385b28b1c754f4aa9f7e57672d6a80e2
+    
+
+  - name: Install kibana
+    ansible.builtin.apt:
+      deb: /tmp/kibana-7.17.28-amd64.deb
+   
+
+  - name: Copy kibana.yml
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/kibana/kibana.yml
+      dest: /etc/kibana/kibana.yml
+      mode: preserve
+
+  - name: Enable service kibana
+    ansible.builtin.service:
+      name: kibana.service
+      enabled: yes
+  
+  - name: Start service kibana
+    ansible.builtin.service:
+      name: kibana.service
+      state: started
+
+ 
+- name: filebeat install
+  hosts: logs
+  become: true
+  
+  tasks:
+
+
+  - name: Push filebeat-7.17.28-amd64.deb (get_url - sha256)
+    ansible.builtin.get_url:
+      url: https://getfile.dokpub.com/yandex/get/https://disk.yandex.ru/d/mSOVfRwqpeF39g
+      dest: /tmp/filebeat-7.17.28-amd64.deb
+      checksum: sha256:b66cf690ab32daa852c82ca76c5712d87068082b1a6d3e7defdf101d8c99ee78
+      
+
+  - name: Install filebeat
+    ansible.builtin.apt:
+      deb: /tmp/filebeat-7.17.28-amd64.deb
+
+##############################################
+
+- name: filebeat on elastic start
+  hosts: elastic-pc
+  become: true
+  
+  tasks:
+
+  - name: Copy filebeat.yml
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/filebeat/filebeat_elasticsearch.yml
+      dest: /etc/filebeat/filebeat.yml
+      mode: '0600'
+      
+  - name: Copy elasticsearch.yml.disabled
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/filebeat/elasticsearch.yml.disabled
+      dest: /etc/filebeat/modules.d/elasticsearch.yml.disabled
+      mode: preserve
+
+  - name: Enable elasticsearch module - copy elasticsearch.yml.disabled to elasticsearch.yml
+    ansible.builtin.copy:
+      remote_src: true
+      src: /etc/filebeat/modules.d/elasticsearch.yml.disabled
+      dest: /etc/filebeat/modules.d/elasticsearch.yml
+
+  - name: Enable elasticsearch module - remove elasticsearch.yml.disabled
+    ansible.builtin.file:
+      path: /etc/filebeat/modules.d/elasticsearch.yml.disabled
+      state: absent
+
+  - name: Enable service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      enabled: yes
+  
+  - name: Start service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      state: started
+
+##############################################
+
+- name: filebeat on kibana start
+  hosts: kibana-pc
+  become: true
+  
+  tasks:
+
+  - name: Copy filebeat.yml
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/filebeat/filebeat_kibana.yml
+      dest: /etc/filebeat/filebeat.yml
+      mode: '0600'
+      
+  - name: Copy kibana.yml.disabled
+    ansible.builtin.copy:
+      src: ~/kurs2025/logs/filebeat/kibana.yml.disabled
+      dest: /etc/filebeat/modules.d/kibana.yml.disabled
+      mode: preserve
+
+  - name: Enable kibana module - copy kibana.yml.disabled to kibana.yml
+    ansible.builtin.copy:
+      remote_src: true
+      src: /etc/filebeat/modules.d/kibana.yml.disabled
+      dest: /etc/filebeat/modules.d/kibana.yml
+
+  - name: Enable kibana module - remove kibana.yml.disabled
+    ansible.builtin.file:
+      path: /etc/filebeat/modules.d/kibana.yml.disabled
+      state: absent
+
+  - name: Enable service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      enabled: yes
+  
+  - name: Start service filebeat
+    ansible.builtin.service:
+      name: filebeat.service
+      state: started
+
+...

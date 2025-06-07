@@ -1,0 +1,9 @@
+- hosts: 51.250.21.112
+  remote_user: qshar
+  tasks:
+    - service:
+        name: nginx
+        state: started
+      become: yes
+      become_method: sudo
+
