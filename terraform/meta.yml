@@ -1,0 +1,9 @@
+ users:
+  - name: qshar
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBGbPn/s3bBvGofxMwY1FN5QxotErLNnWmoyQMJqPQ5+ qshar@qsharpc03
+
+
