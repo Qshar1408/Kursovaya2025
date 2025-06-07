@@ -237,7 +237,7 @@ resource "yandex_alb_virtual_host" "my_virtual_host" {
 }
 ```
 
-Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.
+#### Задача № 5. *Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.*
 
 Протестируйте сайт
 `curl -v <публичный IP балансера>:80` 
