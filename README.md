@@ -109,8 +109,8 @@ resource "yandex_compute_instance" "web-b"{
 #### *Задача № 2: Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.*
 
 #### 2.Используем статичные файлы для сайта. 
-#### Папка *nginx* - содержит необходимые данные для разворачивания nginx: [default](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/default) и [nginx.conf](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/nginx.conf) 
-#### Папка *WWW* - содержит статичные файлы для веб-сайтов web-a и web-b, а так же default [index.nginx-debian-web-a.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian-web-a.html) и [index.nginx-debian-web-b.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian-web-b.html) [index.nginx-debian.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian.html)
+#### Папка *nginx* - содержит необходимые данные для разворачивания nginx: [default](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/default), [nginx.conf](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/nginx.conf) 
+#### Папка *WWW* - содержит статичные файлы для веб-сайтов web-a и web-b, а так же default [index.nginx-debian-web-a.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian-web-a.html), [index.nginx-debian-web-b.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian-web-b.html), [index.nginx-debian.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian.html)
 
 ```bash
 <!DOCTYPE html>
