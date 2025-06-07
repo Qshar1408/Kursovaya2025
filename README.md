@@ -205,7 +205,37 @@ resource "yandex_alb_backend_group" "my_backend_group" {
   }
 ```
 
-Создайте [HTTP router](https://cloud.yandex.com/docs/application-load-balancer/concepts/http-router). Путь укажите — /, backend group — созданную ранее.
+#### Задача № 5. *Создайте [HTTP router](https://cloud.yandex.com/docs/application-load-balancer/concepts/http-router). Путь укажите — /, backend group — созданную ранее.*
+
+#### 5. Создаем HTTP router посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
+
+```bash
+#Создаем HTTP route
+
+resource "yandex_alb_http_router" "my_http_router" {
+  name          = "my-http-router"
+  description   = "ALB:HTTP роутер"
+}
+
+resource "yandex_alb_virtual_host" "my_virtual_host" {
+  name                    = "my-virtual-host"
+  http_router_id          = "${yandex_alb_http_router.my_http_router.id}"
+  route {
+    name                  = "project-route"
+    http_route {
+      http_route_action {
+        backend_group_id  = "${yandex_alb_backend_group.my_backend_group.id}"
+        timeout           = "60s"
+      }
+    }
+  }
+  
+  depends_on = [
+     yandex_alb_http_router.my_http_router,
+     yandex_alb_backend_group.my_backend_group,
+  ]
+}
+```
 
 Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.
 
