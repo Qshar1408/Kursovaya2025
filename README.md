@@ -300,6 +300,7 @@ listener {
 ```
 ##### Скриншот созданного Application load balancer:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_008.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_009.png)
 
 #### Задача № 7. *Протестируйте сайт `curl -v <публичный IP балансера>:80`*
 #### 7.Тест сайта:
