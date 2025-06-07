@@ -105,6 +105,8 @@ resource "yandex_compute_instance" "web-b"{
 }
 ```
 
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_001.png)
+
 
 #### *Задача № 2: Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.*
 
