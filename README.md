@@ -106,7 +106,7 @@ resource "yandex_compute_instance" "web-b"{
 
 #### *Задача № 2: Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.*
 
-##### 2.Используем статичные файлы для сайта. Папка *nginx* - содержит необходимые данные для разворачивания nginx: [default](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/default) и [nginx.conf](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx.conf) 
+##### 2.Используем статичные файлы для сайта. Папка *nginx* - содержит необходимые данные для разворачивания nginx: [default](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/default) и [nginx.conf](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/nginx.conf) 
 
 ```bash
 <!DOCTYPE html>
