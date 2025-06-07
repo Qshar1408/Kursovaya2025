@@ -239,7 +239,7 @@ resource "yandex_alb_virtual_host" "my_virtual_host" {
 
 #### Задача № 6. *Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.*
 
-#### 5. Создаем Application load balancer посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
+#### 6. Создаем Application load balancer посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
 
 ```bash
 #Создание балансировщика (Application load balancer)
@@ -282,8 +282,9 @@ listener {
 }
 ```
 
-Протестируйте сайт
-`curl -v <публичный IP балансера>:80` 
+#### Задача № 7. *Протестируйте сайт `curl -v <публичный IP балансера>:80`*
+#### 7.Тест сайта:
+
 
 ### Мониторинг
 Создайте ВМ, разверните на ней Prometheus. На каждую ВМ из веб-серверов установите Node Exporter и [Nginx Log Exporter](https://github.com/martin-helmich/prometheus-nginxlog-exporter). Настройте Prometheus на сбор метрик с этих exporter.
