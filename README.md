@@ -150,7 +150,7 @@ ansible-playbook -l web web.yaml -k
 
 #### *Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.*
 
-#### 4.Создаем Target Group [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.yaml)
+#### 4.Создаем Target Group посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
 
 ```bash
 #Создаем Target Group
