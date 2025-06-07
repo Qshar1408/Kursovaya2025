@@ -159,6 +159,11 @@ ansible-playbook -l web web.yaml -k
 ##### Скриншот запущенного Node Exporter:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_004.png)
 
+##### Скриншот запущенного сайта web-a:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_010.png)
+##### Скриншот запущенного сайте web-b:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_011.png)
+
 #### Задача № 3. *Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.*
 
 #### 3. Создаем Target Group посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
@@ -304,7 +309,11 @@ listener {
 
 #### Задача № 7. *Протестируйте сайт `curl -v <публичный IP балансера>:80`*
 #### 7.Тест сайта:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_014.png)
 
+##### Скриншот запущенного сайта через балансировщик:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_012.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_013.png)
 
 ### Мониторинг
 Создайте ВМ, разверните на ней Prometheus. На каждую ВМ из веб-серверов установите Node Exporter и [Nginx Log Exporter](https://github.com/martin-helmich/prometheus-nginxlog-exporter). Настройте Prometheus на сбор метрик с этих exporter.
