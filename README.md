@@ -237,7 +237,50 @@ resource "yandex_alb_virtual_host" "my_virtual_host" {
 }
 ```
 
-#### Задача № 5. *Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.*
+#### Задача № 6. *Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.*
+
+#### 5. Создаем Application load balancer посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
+
+```bash
+#Создание балансировщика (Application load balancer)
+
+resource "yandex_alb_load_balancer" "alb-1" {
+  name        = "alb-1"
+  description = "ALB"
+  network_id  = "${yandex_vpc_network.network-1.id}"
+
+  allocation_policy {
+    location {
+      zone_id   = "ru-central1-a"
+      subnet_id = "${yandex_vpc_subnet.subnet-1.id}"
+    }
+    location {
+      zone_id   = "ru-central1-b"
+      subnet_id = "${yandex_vpc_subnet.subnet-2.id}"
+    }
+  }
+
+listener {
+    name = "mylistener"
+    endpoint {
+      address {
+        external_ipv4_address {
+        }
+      }
+      ports = [ 80 ]
+    }
+    http {
+      handler {
+        http_router_id = "${yandex_alb_http_router.my_http_router.id}"
+      }
+    }
+  }
+  
+  depends_on = [
+     yandex_alb_http_router.my_http_router,
+  ]
+}
+```
 
 Протестируйте сайт
 `curl -v <публичный IP балансера>:80` 
