@@ -108,7 +108,7 @@ resource "yandex_compute_instance" "web-b"{
 
 #### *Задача № 2: Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.*
 
-#### 2. Используем статичные файлы для сайта. 
+#### 2.1 Используем статичные файлы для сайта. 
 #### Папка "nginx" - содержит необходимые данные для разворачивания nginx: [default](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/default), [nginx.conf](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/nginx.conf) 
 #### Папка "WWW" - содержит статичные файлы для веб-сайтов web-a и web-b, а так же default [index.nginx-debian-web-a.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian-web-a.html), [index.nginx-debian-web-b.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian-web-b.html), [index.nginx-debian.html](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/WWW/index.nginx-debian.html)
 
@@ -140,7 +140,7 @@ working. Further configuration is required.</p>
 </html>
 ```
 
-#### 3. С помощью Ansible-playbook устанавливаем на машинах web-a и web-b следующие сервисы: Nginx, Filebeat, Node Exporter 
+#### 2.2. С помощью Ansible-playbook устанавливаем на машинах web-a и web-b следующие сервисы: Nginx, Filebeat, Node Exporter 
 
 ```bash
 ansible-playbook -l web web.yaml -k
@@ -148,9 +148,9 @@ ansible-playbook -l web web.yaml -k
 #### Плейбук для разворачивания [web.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/web.yaml)
 
 
-#### *Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.*
+#### Задача № 3. *Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.*
 
-#### 4.Создаем Target Group посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
+#### 3. Создаем Target Group посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
 
 ```bash
 #Создаем Target Group
@@ -175,7 +175,35 @@ resource "yandex_alb_target_group" "web-target-group" {
 }
 ```
 
-Создайте [Backend Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/backend-group), настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.
+#### Задача № 4. *Создайте [Backend Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/backend-group), настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.*
+
+#### 4. Создаем Backend Group посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
+
+```bash
+#Создаем Backend Group
+
+resource "yandex_alb_backend_group" "my_backend_group" {
+  name                     = "my-backend-group"
+  description              = "ALB:Группа бэкендов"
+  http_backend {
+    name                   = "my-backend"
+    weight                 = 1
+    port                   = 80
+    target_group_ids       = ["${yandex_alb_target_group.web-target-group.id}"]
+    load_balancing_config {
+      panic_threshold      = 90
+    }    
+    healthcheck {
+      timeout              = "10s"
+      interval             = "2s"
+      healthy_threshold    = 10
+      unhealthy_threshold  = 15 
+      http_healthcheck {
+        path               = "/"
+      }
+    }
+  }
+```
 
 Создайте [HTTP router](https://cloud.yandex.com/docs/application-load-balancer/concepts/http-router). Путь укажите — /, backend group — созданную ранее.
 
