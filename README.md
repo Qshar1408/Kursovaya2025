@@ -103,7 +103,38 @@ resource "yandex_compute_instance" "web-b"{
   }
 }
 ```
+
 Задача: Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.
+
+#### 2.Используем статичные файлы для сайта
+
+```bash
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+	background-color: #4dff9d;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<h2><i><font color="#ff0000"></font>Kursovaya rabota 2025<br>Gribanov Anton. FOPS-31<br>netology <a href="https://netology.ru/">netology.ru</a><br></font></i></h2>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+<br>
+<p><u>IP Address Nginx Server:</u> <b><font size="+2" color="#ff0000"><!--#echo var="SERVER_ADDR"--></font></b></br>
+<u>Name Nginx Server:</u> <b><font size="+2" color="#ff0000"><!--#echo var="HOSTNAME"--></font></b></p>
+<p><em><center><!--#echo var="DATE_LOCAL"--></center></em></p>
+
+</body>
+</html>
+```
 
 Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.
 
