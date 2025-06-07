@@ -140,10 +140,11 @@ working. Further configuration is required.</p>
 </html>
 ```
 
-#### 3. С помощью Ansible-playbook устанавливаем на машинах web-a и web-b следующие сервисы Nginx, Filebeat, Node Exporter 
+#### 3. С помощью Ansible-playbook устанавливаем на машинах web-a и web-b следующие сервисы: Nginx, Filebeat, Node Exporter 
 ```bash
 ansible-playbook -l web web.yaml -k
 ```
+[web.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/web.yaml)
 
 
 Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.
