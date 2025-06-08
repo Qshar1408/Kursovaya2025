@@ -381,7 +381,7 @@ ansible-playbook -l mons monitoring.yaml -k
 ##### Скриншот запущенного сервиса Node-Exporter:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_016.png)
 
-##### Скриншот запущенного сервиса Fileиeat:
+##### Скриншот запущенного сервиса Filebeat:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_017.png)
 
 ##### Скриншот запущенного Prometheus (порт 9090):
