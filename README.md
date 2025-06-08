@@ -476,7 +476,7 @@ ansible-playbook -l mons monitoring.yaml -k
 ##### Скриншот запущенного портала Grafana:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_022.png)
 
-При входе используем логин "admin" и пароль "Grafana123" (при не обходимости меняем)
+При входе используем логин "admin" и пароль "Grafana123" (при необходимости меняем)
 
 Так же, после авторизации необходимо проверить настройки подключения к Prometheus (т.к. после поднятия машины может поменятся внешний IP-адрес)
 
@@ -496,10 +496,113 @@ ansible-playbook -l mons monitoring.yaml -k
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_027.png)
 
 
-### Логи
-Cоздайте ВМ, разверните на ней Elasticsearch. Установите filebeat в ВМ к веб-серверам, настройте на отправку access.log, error.log nginx в Elasticsearch.
+## Раздел 3. Логи
 
-Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.
+***
+#### Задача № 1. *Cоздайте ВМ, разверните на ней Elasticsearch. Установите filebeat в ВМ к веб-серверам, настройте на отправку access.log, error.log nginx в Elasticsearch.*
+***
+
+#### 1.1. Создаём VM Elasticsearch. Используем два файла - [main_machine.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine.tf) (в котором находятся непосредственно параметры для VM), а так же [main_machine_disk.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine_disk.tf) (в нём указаны образы диска для будущих машин) 
+
+```bash
+#Создаем машину Elastic
+
+resource "yandex_compute_instance" "elastic-pc" {
+  name                      = "elastic-pc"
+  allow_stopping_for_update = true
+  platform_id               = "standard-v1"
+  zone                      = "ru-central1-a"
+  hostname                  = "elastic-pc"
+
+  resources {
+    cores          = 2
+    memory         = 4
+    core_fraction  = 20
+  }
+
+  boot_disk {
+    disk_id     = "${yandex_compute_disk.disk_elastic.id}"
+  }
+  
+  network_interface {
+    subnet_id   = "${yandex_vpc_subnet.subnet-1.id}"
+    nat         = true
+  }
+  
+  scheduling_policy {
+    preemptible = true
+  }
+
+metadata = {
+    ssh-keys    = "qshar:${file("~/.ssh/id_rsa2025.pub")}"
+    user-data   = "#cloud-config\ndatasource:\n Ec2:\n  strict_id: false\nssh_pwauth: no\nusers:\n- name: qshar\n  sudo: ALL=(ALL) NOPASSWD:ALL\n  shell: /bin/bash\n  ssh_authorized_keys:\n  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIItN3dEKvFKOGoTEQGZbdp7Gy9gXeKZK9T85zlyaM63T qshar@qsharpc03"
+  }
+
+}
+```
+
+```bash
+resource "yandex_compute_disk" "disk_elastic" {
+  name     = "disk-elastic"
+  type     = "network-hdd"
+  zone     = "ru-central1-a"
+  image_id = "fd8gqjo661d83tv5dnv4"
+  size     = 8
+}
+```
+
+***
+#### Задача № 2. *Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.*
+***
+
+#### 2.1. Создаём VM Kibana. Используем два файла - [main_machine.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine.tf) (в котором находятся непосредственно параметры для VM), а так же [main_machine_disk.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine_disk.tf) (в нём указаны образы диска для будущих машин) 
+
+```bash
+#Создаем машину Kibana
+
+resource "yandex_compute_instance" "kibana-pc" {
+  name                      = "kibana-pc"
+  allow_stopping_for_update = true
+  platform_id               = "standard-v1"
+  zone                      = "ru-central1-a"
+  hostname                  = "kibana-pc"
+
+  resources {
+    cores          = 2
+    memory         = 4
+    core_fraction  = 20
+  }
+
+  boot_disk {
+    disk_id     = "${yandex_compute_disk.disk_kibana.id}"
+  }
+  
+  network_interface {
+    subnet_id   = "${yandex_vpc_subnet.subnet-1.id}"
+    nat         = true
+  }
+  
+  scheduling_policy {
+    preemptible = true
+  }
+
+  metadata = {
+    ssh-keys    = "qshar:${file("~/.ssh/id_rsa2025.pub")}"
+    user-data   = "#cloud-config\ndatasource:\n Ec2:\n  strict_id: false\nssh_pwauth: no\nusers:\n- name: qshar\n  sudo: ALL=(ALL) NOPASSWD:ALL\n  shell: /bin/bash\n  ssh_authorized_keys:\n  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIItN3dEKvFKOGoTEQGZbdp7Gy9gXeKZK9T85zlyaM63T qshar@qsharpc03"
+  }
+
+}
+```
+
+```bash
+resource "yandex_compute_disk" "disk_kibana" {
+  name     = "disk-kibana"
+  type     = "network-hdd"
+  zone     = "ru-central1-a"
+  image_id = "fd8gqjo661d83tv5dnv4"
+  size     = 8
+}
+```
 
 ### Сеть
 Разверните один VPC. Сервера web, Prometheus, Elasticsearch поместите в приватные подсети. Сервера Grafana, Kibana, application load balancer определите в публичную подсеть.
