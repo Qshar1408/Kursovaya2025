@@ -671,7 +671,7 @@ ansible-playbook -l mons logs.yaml -k
 #### Задача № 1. *Разверните один VPC. Сервера web, Prometheus, Elasticsearch поместите в приватные подсети. Сервера Grafana, Kibana, application load balancer определите в публичную подсеть.*
 ***
 
-Код разворичивания VPC размещён в TF файле [network_subnet.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/network_subnet.yaml)
+Код разворичивания VPC размещён в TF файле [network_subnet.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/network_subnet.tf)
 
 ```bash
 #Создаем облачную сеть
