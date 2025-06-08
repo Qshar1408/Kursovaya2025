@@ -560,11 +560,13 @@ ansible-playbook -l mons logs.yaml -k
 #### Плейбук для разворачивания [logs.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/logs.yaml)
 
 ##### Скриншот запущенного сервиса Elasticsearch:
-![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_020.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_028.png)
 
 ##### Скриншот запущенного сервиса Filebeat:
-![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_021.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_029.png)
 
+##### Скриншот запущенного портала Elasticsearch (Логин: elastic; Пароль: 1qaz@WSX):
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_030.png)
 
 ***
 #### Задача № 2. *Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.*
