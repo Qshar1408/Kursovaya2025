@@ -392,7 +392,7 @@ ansible-playbook -l mons monitoring.yaml -k
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_019.png)
 
 
-#### Задача № 2. *Создайте ВМ, установите туда Grafana. Настройте её на взаимодействие с ранее развернутым Prometheus. Настройте дешборды с отображением метрик, минимальный набор — Utilization, Saturation, Errors для CPU, RAM, диски, сеть, http_response_count_total, http_response_size_bytes. Добавьте необходимые [tresholds](https://grafana.com/docs/grafana/latest/panels/thresholds/) на соответствующие графики.
+#### Задача № 2. *Создайте ВМ, установите туда Grafana. Настройте её на взаимодействие с ранее развернутым Prometheus. Настройте дешборды с отображением метрик, минимальный набор — Utilization, Saturation, Errors для CPU, RAM, диски, сеть, http_response_count_total, http_response_size_bytes. Добавьте необходимые [tresholds](https://grafana.com/docs/grafana/latest/panels/thresholds/) на соответствующие графики.*
 
 #### 2.1. Создаём VM Grafana. Используем два файла - [main_machine.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine.tf) (в котором находятся непосредственно параметры для VM), а так же [main_machine_disk.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine_disk.tf) (в нём указаны образы диска для будущих машин) 
 
@@ -449,6 +449,34 @@ ansible-playbook -l mons monitoring.yaml -k
 ```
 
 #### Плейбук для разворачивания [monitoring.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/monitoring.yaml)
+
+##### Скриншот запущенного сервиса Grafana:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_020.png)
+
+##### Скриншот запущенного сервиса Filebeat:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_021.png)
+
+##### Скриншот запущенного портала Grafana:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_022.png)
+
+При входе используем логин "admin" и пароль "Grafana123" (при не обходимости меняем)
+
+Так же, после авторизации необходимо проверить настройки подключения к Prometheus (т.к. после поднятия машины может поменятся внешний IP-адрес)
+
+##### Скриншот проверки подключения к Prometheus:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_023.png)
+
+##### Скриншот выбора Dashboard-ов:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_024.png)
+
+##### Скриншот настроенных метрик для веб-сайта web-a:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_025.png)
+
+##### Скриншот настроенных метрик для веб-сайта web-b:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_026.png)
+
+##### Скриншот настроенных метрик для веб-сайта Prometheus:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_027.png)
 
 
 ### Логи
