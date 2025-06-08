@@ -318,6 +318,79 @@ listener {
 ### Мониторинг
 Создайте ВМ, разверните на ней Prometheus. На каждую ВМ из веб-серверов установите Node Exporter и [Nginx Log Exporter](https://github.com/martin-helmich/prometheus-nginxlog-exporter). Настройте Prometheus на сбор метрик с этих exporter.
 
+#### 1. Создаём VM Prometheus. Используем два файла - [main_machine.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine.tf) (в котором находятся непосредственно параметры для VM), а так же [main_machine_disk.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine_disk.tf) (в нём указаны образы диска для будущих машин) 
+
+```bash
+#Создаем машину Prometheus
+
+resource "yandex_compute_instance" "prometheus-pc" {
+  name                      = "prometheus-pc"
+  allow_stopping_for_update = true
+  platform_id               = "standard-v1"
+  zone                      = "ru-central1-a"
+  hostname                  = "prometheus-pc"
+
+  resources {
+    cores          = 2
+    memory         = 2
+    core_fraction  = 20
+  }
+
+  boot_disk {
+    disk_id     = "${yandex_compute_disk.disk_prometheus.id}"
+  }
+  
+  network_interface {
+    subnet_id   = "${yandex_vpc_subnet.subnet-1.id}"
+    nat         = true
+  }
+  
+  scheduling_policy {
+    preemptible = true
+  }
+
+  metadata = {
+    ssh-keys    = "qshar:${file("~/.ssh/id_rsa2025.pub")}"
+    user-data   = "#cloud-config\ndatasource:\n Ec2:\n  strict_id: false\nssh_pwauth: no\nusers:\n- name: qshar\n  sudo: ALL=(ALL) NOPASSWD:ALL\n  shell: /bin/bash\n  ssh_authorized_keys:\n  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIItN3dEKvFKOGoTEQGZbdp7Gy9gXeKZK9T85zlyaM63T qshar@qsharpc03"
+  }
+
+}
+```
+
+```bash
+resource "yandex_compute_disk" "disk_prometheus" {
+  name     = "disk-prometheus"
+  type     = "network-hdd"
+  zone     = "ru-central1-a"
+  image_id = "fd8gqjo661d83tv5dnv4"
+  size     = 6
+}
+```
+
+#### 2. С помощью Ansible-playbook устанавливаем сам Prometheus, а так же Node Exporter и Filebeat
+
+```bash
+ansible-playbook -l mons monitoring.yaml -k
+```
+
+#### Плейбук для разворачивания [monitoring.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/monitoring.yaml)
+
+##### Скриншот запущенного сервиса Prometheus:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_015.png)
+
+##### Скриншот запущенного сервиса Node-Exporter:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_016.png)
+
+##### Скриншот запущенного сервиса Fileveat:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_017.png)
+
+##### Скриншот запущенного Prometheus (порт 9090):
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_018.png)
+
+##### Скриншот запущенного Prometheus (порт 9100):
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_019.png)
+
+
 Создайте ВМ, установите туда Grafana. Настройте её на взаимодействие с ранее развернутым Prometheus. Настройте дешборды с отображением метрик, минимальный набор — Utilization, Saturation, Errors для CPU, RAM, диски, сеть, http_response_count_total, http_response_size_bytes. Добавьте необходимые [tresholds](https://grafana.com/docs/grafana/latest/panels/thresholds/) на соответствующие графики.
 
 ### Логи
