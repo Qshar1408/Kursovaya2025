@@ -629,10 +629,39 @@ ansible-playbook -l mons logs.yaml -k
 #### Плейбук для разворачивания [logs.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/logs.yaml)
 
 ##### Скриншот запущенного сервиса Kibana:
-![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_020.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_031.png)
 
 ##### Скриншот запущенного сервиса Filebeat:
-![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_021.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_032.png)
+
+##### Скриншот запущенного портала Kibana (Логин: elastic; Пароль: 1qaz@WSX):
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_033.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_034.png)
+
+##### Скриншот настройки индексов Filebeat
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_035.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_036.png)
+
+##### Скриншот логов с сервера web-a
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_037.png)
+
+##### Скриншот логов с сервера web-b
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_038.png)
+
+##### Скриншот логов с сервера Prometheus
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_039.png)
+
+##### Скриншот логов с сервера Grafana
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_040.png)
+
+##### Скриншот логов с сервера Elasticsearch
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_041.png)
+
+##### Скриншот логов с сервера Kibana
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_042.png)
+
+##### Скриншот логов Dashboard
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_043.png)
 
 
 
