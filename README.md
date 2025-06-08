@@ -551,6 +551,21 @@ resource "yandex_compute_disk" "disk_elastic" {
 }
 ```
 
+#### 1.2. С помощью Ansible-playbook устанавливаем сам Elasticsearch и Filebeat
+
+```bash
+ansible-playbook -l mons logs.yaml -k
+```
+
+#### Плейбук для разворачивания [logs.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/logs.yaml)
+
+##### Скриншот запущенного сервиса Elasticsearch:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_020.png)
+
+##### Скриншот запущенного сервиса Filebeat:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_021.png)
+
+
 ***
 #### Задача № 2. *Создайте ВМ, разверните на ней Kibana, сконфигурируйте соединение с Elasticsearch.*
 ***
@@ -603,6 +618,21 @@ resource "yandex_compute_disk" "disk_kibana" {
   size     = 8
 }
 ```
+
+#### 2.2. С помощью Ansible-playbook устанавливаем саму Kibana и Filebeat
+
+```bash
+ansible-playbook -l mons logs.yaml -k
+```
+#### Плейбук для разворачивания [logs.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/logs.yaml)
+
+##### Скриншот запущенного сервиса Kibana:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_020.png)
+
+##### Скриншот запущенного сервиса Filebeat:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_021.png)
+
+
 
 ### Сеть
 Разверните один VPC. Сервера web, Prometheus, Elasticsearch поместите в приватные подсети. Сервера Grafana, Kibana, application load balancer определите в публичную подсеть.
