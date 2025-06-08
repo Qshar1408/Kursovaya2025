@@ -671,7 +671,9 @@ ansible-playbook -l mons logs.yaml -k
 #### Задача № 1. *Разверните один VPC. Сервера web, Prometheus, Elasticsearch поместите в приватные подсети. Сервера Grafana, Kibana, application load balancer определите в публичную подсеть.*
 ***
 
-Код разворичивания VPC размещён в TF файле [network_subnet.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/network_subnet.tf)
+#### 1.1. Разворачиваем сеть и подсети, размещаем машины по указанным сетям.
+
+Код разворичивания VPC размещён в TF файле [network_subnet.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/network_subnet.tf)
 
 ```bash
 #Создаем облачную сеть
@@ -702,9 +704,37 @@ resource "yandex_vpc_subnet" "subnet-2" {
 ##### Скриншот созданных подсетей subnet-1 и subnet-2:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_045.png)
 
-Настройте [Security Groups](https://cloud.yandex.com/docs/vpc/concepts/security-groups) соответствующих сервисов на входящий трафик только к нужным портам.
+***
+#### Задача № 2. *Настройте [Security Groups](https://cloud.yandex.com/docs/vpc/concepts/security-groups) соответствующих сервисов на входящий трафик только к нужным портам.*
+***
 
-Настройте ВМ с публичным адресом, в которой будет открыт только один порт — ssh. Настройте все security groups на разрешение входящего ssh из этой security group. Эта вм будет реализовывать концепцию bastion host. Потом можно будет подключаться по ssh ко всем хостам через этот хост.
+#### 2. Настраиваем Security Group
+
+Код настройки Security Group размещён в TF файле [main_security_group.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_security_group.tf)
+
+##### Скриншот настроенных групп безопасности:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_046.png)
+
+##### Скриншот настроенной группы безопасности для веб-серверов (web-sg)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_047.png)
+
+##### Скриншот настроенной группы безопасности для Prometheus (prometheus-sg)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_048.png)
+
+##### Скриншот настроенной группы безопасности для Grafana (grafana-sg)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_049.png)
+
+##### Скриншот настроенной группы безопасности для Elasticsearch (elastic-sg)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_050.png)
+
+##### Скриншот настроенной группы безопасности для Kibana (kibana-sg)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_051.png)
+
+
+***
+#### Задача № 3. Настройте ВМ с публичным адресом, в которой будет открыт только один порт — ssh. Настройте все security groups на разрешение входящего ssh из этой security group. Эта вм будет реализовывать концепцию bastion host. Потом можно будет подключаться по ssh ко всем хостам через этот хост.*
+***
+
 
 ### Резервное копирование
 Создайте snapshot дисков всех ВМ. Ограничьте время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование.
