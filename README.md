@@ -665,8 +665,42 @@ ansible-playbook -l mons logs.yaml -k
 
 
 
-### Сеть
-Разверните один VPC. Сервера web, Prometheus, Elasticsearch поместите в приватные подсети. Сервера Grafana, Kibana, application load balancer определите в публичную подсеть.
+## Раздел 4. Сеть
+
+***
+#### Задача № 1. *Разверните один VPC. Сервера web, Prometheus, Elasticsearch поместите в приватные подсети. Сервера Grafana, Kibana, application load balancer определите в публичную подсеть.*
+***
+
+Код разворичивания VPC размещён в TF файле [network_subnet.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/network_subnet.yaml)
+
+```bash
+#Создаем облачную сеть
+resource "yandex_vpc_network" "network-1" {
+  name = "network-1"
+}
+
+#Создаем подсеть  в зоне А
+resource "yandex_vpc_subnet" "subnet-1" {
+  name           = "subnet-1"
+  v4_cidr_blocks = ["192.168.10.0/24"]
+  network_id     = "${yandex_vpc_network.network-1.id}"
+  zone           = "ru-central1-a"
+}
+
+#Создаем подсеть  в зоне В
+resource "yandex_vpc_subnet" "subnet-2" {
+  name           = "subnet-2"
+  v4_cidr_blocks = ["192.168.11.0/24"]
+  network_id     = "${yandex_vpc_network.network-1.id}"
+  zone           = "ru-central1-b"
+}
+```
+
+##### Скриншот созданной облачной сети network-1:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_044.png)
+
+##### Скриншот созданных подсетей subnet-1 и subnet-2:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_045.png)
 
 Настройте [Security Groups](https://cloud.yandex.com/docs/vpc/concepts/security-groups) соответствующих сервисов на входящий трафик только к нужным портам.
 
