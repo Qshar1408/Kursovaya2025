@@ -732,21 +732,58 @@ resource "yandex_vpc_subnet" "subnet-2" {
 
 
 ***
-#### Задача № 3. Настройте ВМ с публичным адресом, в которой будет открыт только один порт — ssh. Настройте все security groups на разрешение входящего ssh из этой security group. Эта вм будет реализовывать концепцию bastion host. Потом можно будет подключаться по ssh ко всем хостам через этот хост.*
+#### *Задача № 3. Настройте ВМ с публичным адресом, в которой будет открыт только один порт — ssh. Настройте все security groups на разрешение входящего ssh из этой security group. Эта вм будет реализовывать концепцию bastion host. Потом можно будет подключаться по ssh ко всем хостам через этот хост.*
 ***
 
 #### 3. Настройка ВМ с публичным адресом, в которой будет открыт только один порт — ssh
 
 Для реализации роли Bastion Host (возможность доступа по SSH с одной ВМ на остальные ВМ в VPC) копируем используемые для авторизации по SSH пару ключей на ВМ Grafana-pc. Копирование публичного ключа выполняется на этапе создания ВМ [monitoring.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/monitoring.yaml)
 
-##### Скриншоты реализации Bastion Host
+##### Скриншоты реализации Bastion Host:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_052.png)
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_053.png)
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_054.png)
 
 
-### Резервное копирование
-Создайте snapshot дисков всех ВМ. Ограничьте время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование.
+## Раздел 5. Резервное копирование
+
+***
+#### *Задача № 1. Создайте snapshot дисков всех ВМ. Ограничьте время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование.*
+***
+
+#### 1. Создаем задачу резервного копирования [main_snapshots.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_snapshots.tf)
+
+```bash
+#Создаем расписание создания snapshot дисков всех машин
+
+resource "yandex_compute_snapshot_schedule" "snapshot_schedule" {
+  name           = "snapshot-schedule"
+  description    = "Ежедневные снимки. Срок хранения снимков 7 дней"
+
+  schedule_policy {
+    expression = "10 0 ? * *"
+  }
+
+  retention_period = "168h"
+
+  snapshot_spec {
+    description = "retention-snapshot"
+
+  }
+
+disk_ids = ["${yandex_compute_disk.disk_web-a.id}", "${yandex_compute_disk.disk_web-b.id}", "${yandex_compute_disk.disk_elastic.id}", "${yandex_compute_disk.disk_kibana.id}", "${yandex_compute_disk.disk_prometheus.id}", "${yandex_compute_disk.disk_grafana.id}"]
+  
+  depends_on = [
+     yandex_compute_instance.web-a,
+     yandex_compute_instance.web-b,
+     yandex_compute_instance.elastic-pc,
+     yandex_compute_instance.kibana-pc,
+     yandex_compute_instance.prometheus-pc,
+     yandex_compute_instance.grafana-pc,
+  ]
+}
+```
+
 
 ### Дополнительно
 Не входит в минимальные требования. 
