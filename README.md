@@ -784,6 +784,9 @@ disk_ids = ["${yandex_compute_disk.disk_web-a.id}", "${yandex_compute_disk.disk_
 }
 ```
 
+##### Скриншот созданных snapshot дисков:
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_055.png)
+
 
 ### Дополнительно
 Не входит в минимальные требования. 
