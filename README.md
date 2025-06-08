@@ -268,7 +268,9 @@ resource "yandex_alb_virtual_host" "my_virtual_host" {
 ##### Скриншот созданного HTTP router:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_007.png)
 
+***
 #### Задача № 6. *Создайте [Application load balancer](https://cloud.yandex.com/en/docs/application-load-balancer/) для распределения трафика на веб-сервера, созданные ранее. Укажите HTTP router, созданный ранее, задайте listener тип auto, порт 80.*
+***
 
 #### 6. Создаем Application load balancer посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
 
@@ -316,7 +318,10 @@ listener {
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_008.png)
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_009.png)
 
+***
 #### Задача № 7. *Протестируйте сайт `curl -v <публичный IP балансера>:80`*
+***
+
 #### 7.Тест сайта:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_014.png)
 
@@ -402,8 +407,9 @@ ansible-playbook -l mons monitoring.yaml -k
 ##### Скриншот запущенного Prometheus (порт 9100):
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_019.png)
 
-
+***
 #### Задача № 2. *Создайте ВМ, установите туда Grafana. Настройте её на взаимодействие с ранее развернутым Prometheus. Настройте дешборды с отображением метрик, минимальный набор — Utilization, Saturation, Errors для CPU, RAM, диски, сеть, http_response_count_total, http_response_size_bytes. Добавьте необходимые [tresholds](https://grafana.com/docs/grafana/latest/panels/thresholds/) на соответствующие графики.*
+***
 
 #### 2.1. Создаём VM Grafana. Используем два файла - [main_machine.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine.tf) (в котором находятся непосредственно параметры для VM), а так же [main_machine_disk.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine_disk.tf) (в нём указаны образы диска для будущих машин) 
 
