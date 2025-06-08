@@ -30,7 +30,7 @@
 
 Ознакомьтесь со всеми пунктами из этой секции, не беритесь сразу выполнять задание, не дочитав до конца. Пункты взаимосвязаны и могут влиять друг на друга.
 
-## Сайт
+## Раздел 1. Сайт
 
 ***
 #### *Задача № 1: Создайте две ВМ в разных зонах, установите на них сервер nginx, если его там нет. ОС и содержимое ВМ должно быть идентичным, это будут наши веб-сервера.*
@@ -110,8 +110,9 @@ resource "yandex_compute_instance" "web-b"{
 ##### Скриншот развернутых машин:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_001.png)
 
-
+***
 #### *Задача № 2: Используйте набор статичных файлов для сайта. Можно переиспользовать сайт из домашнего задания.*
+***
 
 #### 2.1. Используем статичные файлы для сайта. 
 #### Папка "nginx" - содержит необходимые данные для разворачивания nginx: [default](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/default), [nginx.conf](https://github.com/Qshar1408/Kursovaya2025/blob/main/web/nginx/nginx.conf) 
@@ -166,7 +167,9 @@ ansible-playbook -l web web.yaml -k
 ##### Скриншот запущенного сайте web-b:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_011.png)
 
+***
 #### Задача № 3. *Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.*
+***
 
 #### 3. Создаем Target Group посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
 
@@ -195,7 +198,9 @@ resource "yandex_alb_target_group" "web-target-group" {
 ##### Скриншот созданной Target Group:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_005.png)
 
+***
 #### Задача № 4. *Создайте [Backend Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/backend-group), настройте backends на target group, ранее созданную. Настройте healthcheck на корень (/) и порт 80, протокол HTTP.*
+***
 
 #### 4. Создаем Backend Group посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
 
@@ -227,7 +232,9 @@ resource "yandex_alb_backend_group" "my_backend_group" {
 ##### Скриншот созданной Backend Group:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_006.png)
 
+***
 #### Задача № 5. *Создайте [HTTP router](https://cloud.yandex.com/docs/application-load-balancer/concepts/http-router). Путь укажите — /, backend group — созданную ранее.*
+***
 
 #### 5. Создаем HTTP router посредством Terraform [load_balancer.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/load_balancer.tf)
 
@@ -317,9 +324,11 @@ listener {
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_012.png)
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_013.png)
 
-### Мониторинг
+## Раздел 2. Мониторинг
 
+***
 #### Задача № 1. *Создайте ВМ, разверните на ней Prometheus. На каждую ВМ из веб-серверов установите Node Exporter и [Nginx Log Exporter](https://github.com/martin-helmich/prometheus-nginxlog-exporter). Настройте Prometheus на сбор метрик с этих exporter.*
+***
 
 #### 1. Создаём VM Prometheus. Используем два файла - [main_machine.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine.tf) (в котором находятся непосредственно параметры для VM), а так же [main_machine_disk.tf](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform/main_machine_disk.tf) (в нём указаны образы диска для будущих машин) 
 
