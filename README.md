@@ -739,6 +739,12 @@ resource "yandex_vpc_subnet" "subnet-2" {
 
 Для реализации роли Bastion Host (возможность доступа по SSH с одной ВМ на остальные ВМ в VPC) копируем используемые для авторизации по SSH пару ключей на ВМ Grafana-pc. Копирование публичного ключа выполняется на этапе создания ВМ [monitoring.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/monitoring.yaml)
 
+##### Скриншоты реализации Bastion Host
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_052.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_053.png)
+![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_054.png)
+
+
 ### Резервное копирование
 Создайте snapshot дисков всех ВМ. Ограничьте время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование.
 
