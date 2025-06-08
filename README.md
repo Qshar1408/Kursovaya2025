@@ -715,19 +715,19 @@ resource "yandex_vpc_subnet" "subnet-2" {
 ##### Скриншот настроенных групп безопасности:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_046.png)
 
-##### Скриншот настроенной группы безопасности для веб-серверов (web-sg)
+##### Скриншот настроенной группы безопасности для веб-серверов (web-sg):
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_047.png)
 
-##### Скриншот настроенной группы безопасности для Prometheus (prometheus-sg)
+##### Скриншот настроенной группы безопасности для Prometheus (prometheus-sg):
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_048.png)
 
-##### Скриншот настроенной группы безопасности для Grafana (grafana-sg)
+##### Скриншот настроенной группы безопасности для Grafana (grafana-sg):
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_049.png)
 
-##### Скриншот настроенной группы безопасности для Elasticsearch (elastic-sg)
+##### Скриншот настроенной группы безопасности для Elasticsearch (elastic-sg):
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_050.png)
 
-##### Скриншот настроенной группы безопасности для Kibana (kibana-sg)
+##### Скриншот настроенной группы безопасности для Kibana (kibana-sg):
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_051.png)
 
 
@@ -735,6 +735,9 @@ resource "yandex_vpc_subnet" "subnet-2" {
 #### Задача № 3. Настройте ВМ с публичным адресом, в которой будет открыт только один порт — ssh. Настройте все security groups на разрешение входящего ssh из этой security group. Эта вм будет реализовывать концепцию bastion host. Потом можно будет подключаться по ssh ко всем хостам через этот хост.*
 ***
 
+#### 3. Настройка ВМ с публичным адресом, в которой будет открыт только один порт — ssh
+
+Для реализации роли Bastion Host (возможность доступа по SSH с одной ВМ на остальные ВМ в VPC) копируем используемые для авторизации по SSH пару ключей на ВМ Grafana-pc. Копирование публичного ключа выполняется на этапе создания ВМ [monitoring.yaml](https://github.com/Qshar1408/Kursovaya2025/blob/main/ansible/monitoring.yaml)
 
 ### Резервное копирование
 Создайте snapshot дисков всех ВМ. Ограничьте время жизни snaphot в неделю. Сами snaphot настройте на ежедневное копирование.
