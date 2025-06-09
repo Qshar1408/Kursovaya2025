@@ -675,6 +675,7 @@ ansible-playbook -l mons logs.yaml -k
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_032.png)
 
 ##### Скриншот запущенного портала Kibana (Логин: elastic; Пароль: 1qaz@WSX):
+#### [158.160.97.145:5601](http://158.160.97.145:5601/)
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_033.png)
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_034.png)
 
