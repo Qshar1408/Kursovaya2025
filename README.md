@@ -514,6 +514,7 @@ ansible-playbook -l mons monitoring.yaml -k
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_021.png)
 
 ##### Скриншот запущенного портала Grafana:
+#### [158.160.106.81:3000](http://158.160.106.81:3000/)
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_022.png)
 
 При входе используем логин "admin" и пароль "Grafana123" (при необходимости меняем)
