@@ -210,10 +210,6 @@ ansible-playbook -l web web.yaml -k
 ##### Скриншот запущенного Node Exporter:
 ![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_004.png)
 
-##### Скриншот запущенного сайта web-a:
-![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_010.png)
-##### Скриншот запущенного сайте web-b:
-![Kurs2025](https://github.com/Qshar1408/Kursovaya2025/blob/main/img/kurs2025_011.png)
 
 ***
 #### Задача № 3. *Создайте [Target Group](https://cloud.yandex.com/docs/application-load-balancer/concepts/target-group), включите в неё две созданных ВМ.*
