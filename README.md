@@ -36,14 +36,14 @@
 
 ### 2. Перечень используемого программного обеспечения (ПО)
 
-Ansible 2.18.6 (ubuntu 24.04)
-Python 3.12.3 (ubuntu 24.04) 
-Terraform 2.5.3 (плюс провайдер: yandex, версия 0.142.0, платформа linux_amd64)
-Filebeat, Kibana, Elasticsearch 7.17.28
-Grafana 9.5.6
-Prometheus
-nginx
-Node-Exporter 1.9.2
+ - Ansible 2.18.6 (ubuntu 24.04)
+ - Python 3.12.3 (ubuntu 24.04) 
+ - Terraform 2.5.3 (плюс провайдер: yandex, версия 0.142.0, платформа linux_amd64)
+ - Filebeat, Kibana, Elasticsearch 7.17.28
+ - Grafana 9.5.6
+ - Prometheus
+ - nginx
+ - Node-Exporter 1.9.2
 
 ### 3.Структура и описание назначения файлов и каталогов проекта
 
