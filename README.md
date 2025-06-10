@@ -56,16 +56,16 @@
  - файлы YAML сценарии (playbook) создания сервисов на ВМ;
  - файл инвентаризации (inventary) hosts (заполняется автоматически при выполнении bash скриптов и по мере создания ВМ в облаке).
 
-##### Каталог logs
+##### Каталог [logs](https://github.com/Qshar1408/Kursovaya2025/blob/main/logs)
 Каталог logs содержит подготовленные конфигурационные файлы Elasticsearch, Filebeat  и Kibana для копирования на целевые ВМ после разворачивания самих ВМ и соответствующих сервисов на ВМ.
 
-##### Каталог monitoring
+##### Каталог [monitoring](https://github.com/Qshar1408/Kursovaya2025/blob/main/monitoring)
 Каталог monitoring содержит подготовленные конфигурационные файлы Prometheus, Kibana, Node Exporter и Prometheus Nginxlog Exporter. Конфигурационные файлы копироуются на целевые ВМ после разворачивания самих ВМ и в процессе разворачивания соответствующих сервисов на ВМ.
 
-##### Каталог terraform
+##### Каталог [terraform](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform)
 Каталог terraform содержит файлы TF сценариев развертывания инфраструктуры в облаке с использованием terraform. Данный каталог является рабочим (корневым) для выполнения terraform.
 
-##### Каталог web
+##### Каталог web [web](https://github.com/Qshar1408/Kursovaya2025/blob/main/web)
 Каталог web содержит:
  - подготовленные конфигурационные файлы Nginx (в одноименном дочернем каталоге) - default и nginx.conf;
  - изменённый файл HTML в дочернем каталоге WWW - тестовая страница сайта.
