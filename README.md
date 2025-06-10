@@ -65,7 +65,7 @@
 ##### Каталог [terraform](https://github.com/Qshar1408/Kursovaya2025/blob/main/terraform)
 Каталог terraform содержит файлы TF сценариев развертывания инфраструктуры в облаке с использованием terraform. Данный каталог является рабочим (корневым) для выполнения terraform.
 
-##### Каталог web [web](https://github.com/Qshar1408/Kursovaya2025/blob/main/web)
+##### Каталог [web](https://github.com/Qshar1408/Kursovaya2025/blob/main/web)
 Каталог web содержит:
  - подготовленные конфигурационные файлы Nginx (в одноименном дочернем каталоге) - default и nginx.conf;
  - изменённый файл HTML в дочернем каталоге WWW - тестовая страница сайта.
